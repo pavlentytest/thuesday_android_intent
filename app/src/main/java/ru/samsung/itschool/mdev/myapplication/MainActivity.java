@@ -1,5 +1,7 @@
 package ru.samsung.itschool.mdev.myapplication;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,10 +10,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button btn, btn2;
+    public static final String KEY = "ccc";
+    private ActivityResultLauncher<Intent> launcher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if(result.getResultCode() == MainActivity2.RESULT_CODE) {
+                    Toast.makeText(getApplicationContext(),
+                                    result.getData().getStringExtra(MainActivity2.KEY2),
+                                    Toast.LENGTH_LONG).show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +42,14 @@ public class MainActivity extends AppCompatActivity {
         btn2.setOnClickListener(view -> {
             // явное намерение
             Intent intent = new Intent(MainActivity.this,MainActivity2.class);
-            startActivity(intent);
+            intent.putExtra(KEY,"Hello from MainActivity");
+            //startActivity(intent);
+            launcher.launch(intent);
         });
-
 
     }
 
-   /* @Override
+    /* @Override
     public void onClick(View view) {
         Intent intent = new Intent(this,MainActivity2.class);
     }*/
